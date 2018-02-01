@@ -9,14 +9,14 @@ A HOC enabling you to easily implement extended property equality checks for you
 When writing components whose performance is crucial (for example top level components or components you render A LOT [something among the lines of > 700 times])
 you will often want them to __only update, when their visual appearance will change__.
 
-But how do you do that? Right! Extending from `React.PureComponent` - but wait!
-My component is still rerendering, even though the data it receives didn't change?!
+How do you do that? Right! Extending from `React.PureComponent` - but wait!
+My component is still rerendering, even though the data it receives doesn't change?!
 
 This can often be caused by passing objects to your component - be it a JS `Date()`,
 an array of entities to render _or even the styles property_. Why?
 
 `React.PureComponent` only does a swallow equality check. This means it does a comparison
-using `===` on every key of the old properties and compares it to the value in the new
+using the `===` operator on every key/value pair of the old properties and compares it to the value in the new
 properties.
 However `===` on objects (arrays are also objects in this manner) will only check wether
 or not they reference to the same chunk of memory - not if their content is the same.
@@ -27,7 +27,8 @@ like that:
 ```js
 <MyPureComponent style={{ width: '100%' }} />
 ```
-Rerendering every time its parent rerenders (or more often), because on every parent render
+
+It rerenders every time its parent rerenders (or more often), because on every parent render
 a new object is beeing created (with the same content or key/value pairs but pointing
 at a different chunk of memory, so `oldProps.style === newProps.style` will return false) -
 resulting in your `PureComponent` thinking it received changed props every time its parent rerenders.
