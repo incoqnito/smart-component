@@ -1,0 +1,35 @@
+{
+  "name": "@incoqnito.io/smart-component",
+  "version": "1.0.0",
+  "description": "A HOC enabling you to easily implement extended property equality checks for your React Components",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "jest",
+    "watch_test": "jest --watch",
+    "prepublishOnly": "npm run build",
+    "build": "babel SmartComponent.js --out-file lib/index.js"
+  },
+  "files": [
+    "lib/index.js"
+  ],
+  "keywords": [
+    "HOC",
+    "Component",
+    "componentShouldUpdate",
+    "props",
+    "equality",
+    "optimization",
+    "check"
+  ],
+  "author": "Marces Engel <marces.engel@googlemail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "eslint-plugin-jest": "^21.7.0",
+    "jest": "^22.1.4",
+    "react": "^16.2.0"
+  }
+}
