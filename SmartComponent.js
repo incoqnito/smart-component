@@ -1,13 +1,13 @@
-const checkEquality = (a, b, equalityCheck) => {
+const checkEquality = (a, b, props, nextProps, equalityCheck) => {
   if (typeof equalityCheck === 'function') {
-    return equalityCheck(a, b)
+    return equalityCheck(a, b, props, nextProps)
   } else if (typeof equalityCheck === 'object' && equalityCheck !== null) {
     if (Object.keys(a).length !== Object.keys(b).length) {
       return false
     }
 
     return Object.keys(a).reduce((result, key) => {
-      if (checkEquality(a[key], b[key], equalityCheck[key])) {
+      if (checkEquality(a[key], b[key], props, nextProps, equalityCheck[key])) {
         return result
       } else {
         return false
@@ -26,7 +26,7 @@ const SmartComponent = (equalityChecks = {}) => (WrappedComponent) => class Smar
       .filter((key) => this.props[key] !== nextProps[key])
       .filter((key) => {
         if (equalityChecks.hasOwnProperty(key)) {
-          return !checkEquality(this.props[key], nextProps[key], equalityChecks[key])
+          return !checkEquality(this.props[key], nextProps[key], this.props, nextProps, equalityChecks[key])
         } else {
           return true
         }

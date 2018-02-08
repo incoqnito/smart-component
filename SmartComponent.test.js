@@ -44,7 +44,7 @@ describe('SmartComponent', () => {
       })).toBe(true)
     })
 
-    it('calls the given equality check functions with the previous and the next value of their respective property', () => {
+    it('calls the given equality check functions with the previous and the next value of their respective property and the current and next whole property objects', () => {
       const oldProps = {
         someProperty: true
       }
@@ -63,7 +63,7 @@ describe('SmartComponent', () => {
       })(Test))()
 
       expect(ReturnedComponent.shouldComponentUpdate(newProps)).toBe(true)
-      expect(checkSomeProperty).toHaveBeenCalledWith(oldProps.someProperty, newProps.someProperty)
+      expect(checkSomeProperty).toHaveBeenCalledWith(oldProps.someProperty, newProps.someProperty, oldProps, newProps)
     })
 
     it('checks with === before calling the equality check', () => {
@@ -175,7 +175,9 @@ describe('SmartComponent', () => {
       expect(ReturnedComponent.shouldComponentUpdate(newProps)).toBe(!result)
       expect(equalityCheckFunction).toHaveBeenCalledWith(
         oldProps.someObject.someNestedObject.someProp,
-        newProps.someObject.someNestedObject.someProp
+        newProps.someObject.someNestedObject.someProp,
+        oldProps,
+        newProps
       )
     })
   })
