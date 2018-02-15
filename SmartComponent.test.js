@@ -180,5 +180,24 @@ describe('SmartComponent', () => {
         newProps
       )
     })
+
+    it('returns true if the state has changed (using ===)', () => {
+      const props = {}
+
+      const state = {}
+
+      class Test {
+        props = props
+
+        state = state
+      }
+
+      const checkSomeProperty = jest.fn()
+        .mockReturnValue(true)
+      const ReturnedComponent = new (SmartComponent({})(Test))()
+
+      expect(ReturnedComponent.shouldComponentUpdate(props, state)).toBe(false)
+      expect(ReturnedComponent.shouldComponentUpdate(props, {})).toBe(true)
+    })
   })
 })
