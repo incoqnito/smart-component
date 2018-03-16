@@ -132,7 +132,7 @@ export class DateDisplay extends React.PureComponent {
 export const SmartDateDisplay = smartComponent({
   date: (a, b) => a.getTime() === b.getTime()   // comparison function to compare the values of props.date at two different points in time; true -> equal
   // getTime() returns the timestamp as a number, making you able to compare them for equality just like normal numbers
-}, DateAndMiscDisplay)
+}, DateDisplay)
 ```
 
 You will see the standard component calling its onRender every time you click the button - opposing to the Smart Component,
