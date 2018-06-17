@@ -1,3 +1,4 @@
+import React from 'react'
 import SmartComponent from './SmartComponent'
 
 describe('SmartComponent', () => {
@@ -15,9 +16,45 @@ describe('SmartComponent', () => {
     expect(ReturnedComponent.prototype).toHaveProperty('shouldComponentUpdate', expect.any(Function))
   })
 
+  it('returns false when higher prioritized super.shouldComponentUpdates dont pass', () => {
+    class Super extends React.Component {
+      props = {
+        visible: true,
+      }
+      shouldComponentUpdate() {
+        return false
+      }
+    }
+    const EnhancedComponent = new (SmartComponent()(Super))
+    const newProps = {
+      visible: false
+    }
+
+    expect(EnhancedComponent.shouldComponentUpdate(newProps)).toBe(false)
+  })
+
+  it('returns true higher prioritized super.shouldComponentUpdate passes and pass equlity checks of smart-component', () => {
+    class Super extends React.Component {
+      props = {
+        visible: true,
+      }
+      shouldComponentUpdate() {
+        return true
+      }
+    }
+
+    const EnhancedComponent = new (SmartComponent({
+      visible: jest.fn().mockReturnValue(true)
+    })(Super))
+
+    expect(EnhancedComponent.shouldComponentUpdate({
+      visible: false
+    })).toBe(false)
+  })
+
   describe('shouldComponentUpdate', () => {
     it('returns false if all equality checks pass', () => {
-      class Test {
+      class Test extends React.Component {
         props = {
           someProperty: true
         }
