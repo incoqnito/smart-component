@@ -1,3 +1,5 @@
+import React from 'react'
+
 const checkEquality = (a, b, props, nextProps, equalityCheck) => {
   if (typeof equalityCheck === 'function') {
     return equalityCheck(a, b, props, nextProps)
@@ -20,7 +22,7 @@ const checkEquality = (a, b, props, nextProps, equalityCheck) => {
   }
 }
 
-const SmartComponent = (equalityChecks = {}) => (WrappedComponent) => class SmartComponent extends WrappedComponent {
+const SmartComponent = (equalityChecks = {}) => (WrappedComponent) => class SmartComponent extends React.Component {
   shouldComponentUpdate (nextProps, nextState) {
     const result = Object.keys(nextProps)
       .filter((key) => this.props[key] !== nextProps[key])
@@ -33,6 +35,10 @@ const SmartComponent = (equalityChecks = {}) => (WrappedComponent) => class Smar
       })
 
     return result.length > 0 || this.state !== nextState
+  }
+
+  render () {
+    return <WrappedComponent {...this.props} />
   }
 }
 
