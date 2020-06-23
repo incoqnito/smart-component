@@ -22,24 +22,28 @@ const checkEquality = (a, b, props, nextProps, equalityCheck) => {
   }
 }
 
-const SmartComponent = (equalityChecks = {}) => (WrappedComponent) => class SmartComponent extends React.Component {
-  shouldComponentUpdate (nextProps, nextState) {
-    const result = Object.keys(nextProps)
-      .filter((key) => this.props[key] !== nextProps[key])
-      .filter((key) => {
-        if (equalityChecks.hasOwnProperty(key)) {
-          return !checkEquality(this.props[key], nextProps[key], this.props, nextProps, equalityChecks[key])
-        } else {
-          return true
-        }
-      })
+const SmartComponent = (equalityChecks = {}) => (WrappedComponent) => {
+  class SmartComponent extends React.Component {
+    shouldComponentUpdate (nextProps, nextState) {
+      const result = Object.keys(nextProps)
+        .filter((key) => key !== 'innerRef' && this.props[key] !== nextProps[key])
+        .filter((key) => {
+          if (equalityChecks.hasOwnProperty(key)) {
+            return !checkEquality(this.props[key], nextProps[key], this.props, nextProps, equalityChecks[key])
+          } else {
+            return true
+          }
+        })
 
-    return result.length > 0 || this.state !== nextState
+      return result.length > 0 || this.state !== nextState
+    }
+
+    render () {
+      return <WrappedComponent {...this.props} ref={this.props.forwardRef} />
+    }
   }
 
-  render () {
-    return <WrappedComponent {...this.props} />
-  }
+  return React.forwardRef((props, ref) => <SmartComponent {...props} forwardedRef={ref} />)
 }
 
 export default SmartComponent
