@@ -22,8 +22,33 @@ const checkEquality = (a, b, props, nextProps, equalityCheck) => {
   }
 }
 
-const SmartComponent = (equalityChecks = {}) => (WrappedComponent) => {
+const defaultOptions = {
+  withRef: false
+}
+
+const SmartComponent = (equalityChecks = {}, options = {}) => (WrappedComponent) => {
+  options = {
+    ...defaultOptions,
+    ...options
+  }
+
   class SmartComponent extends React.Component {
+    constructor (props) {
+      super(props)
+
+      if (options.withRef) {
+        this.wrappedInstanceRef = React.createRef()
+      }
+    }
+
+    getWrappedInstance = () => {
+      if (!this.wrappedInstanceRef) {
+        throw new Error('Please set withRef to true if you want to access the wrapped component instance.')
+      }
+
+      return this.wrappedInstanceRef.current
+    }
+
     shouldComponentUpdate (nextProps, nextState) {
       const result = Object.keys(nextProps)
         .filter((key) => key !== 'innerRef' && this.props[key] !== nextProps[key])
@@ -39,11 +64,11 @@ const SmartComponent = (equalityChecks = {}) => (WrappedComponent) => {
     }
 
     render () {
-      return <WrappedComponent {...this.props} ref={this.props.forwardRef} />
+      return <WrappedComponent {...this.props} ref={this.wrappedInstanceRef} />
     }
   }
 
-  return React.forwardRef((props, ref) => <SmartComponent {...props} forwardedRef={ref} />)
+  return SmartComponent
 }
 
 export default SmartComponent

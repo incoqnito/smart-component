@@ -4,6 +4,8 @@
     "env"
   ],
   "plugins": [
-    "transform-class-properties"
+    "transform-class-properties",
+    "transform-es2015-spread",
+    "transform-object-rest-spread"
   ]
 }
